@@ -1,0 +1,134 @@
+import java.util.*;
+
+public class Medicine {
+
+    private String name;
+    private double price;
+    private int quantity;
+
+    // Constructor
+    public Medicine(String name, double price, int quantity) {
+        this.name = name;
+        this.price = price;
+        this.quantity = quantity;
+    }
+
+    // Getters
+    public String getName() { return name; }
+    public double getPrice() { return price; }
+    public int getQuantity() { return quantity; }
+
+    public void setQuantity(int quantity) {
+        this.quantity = quantity;
+    }
+
+    public void display() {
+        System.out.println(name + " | ?" + price + " | Qty: " + quantity);
+    }
+    public static void main(String[] args) {
+
+        ArrayList<Medicine> list = new ArrayList<>();
+        Scanner sc = new Scanner(System.in);
+
+        int choice;
+
+        do {
+            System.out.println("\n===== PHARMACY SYSTEM =====");
+            System.out.println("1. Add Medicine");
+            System.out.println("2. View Stock");
+            System.out.println("3. Generate Bill");
+            System.out.println("4. Exit");
+            System.out.print("Enter choice: ");
+
+            choice = sc.nextInt();
+
+            switch (choice) {
+
+                case 1:
+                    sc.nextLine();
+                    System.out.print("Enter medicine name: ");
+                    String name = sc.nextLine();
+
+                    System.out.print("Enter price: ");
+                    double price = sc.nextDouble();
+
+                    System.out.print("Enter quantity: ");
+                    int qty = sc.nextInt();
+
+                    list.add(new Medicine(name, price, qty));
+                    System.out.println(" Medicine added!");
+                    break;
+
+                case 2:
+                    if (list.isEmpty()) {
+                        System.out.println("? No medicines available!");
+                    } else {
+                        for (int i = 0; i < list.size(); i++) {
+                            System.out.print((i + 1) + ". ");
+                            list.get(i).display();
+                        }
+                    }
+                    break;
+
+                case 3:
+                    if (list.isEmpty()) {
+                        System.out.println("? No medicines available!");
+                        break;
+                    }
+
+                    double total = 0;
+
+                    for (int i = 0; i < list.size(); i++) {
+                        System.out.println((i + 1) + ". " + list.get(i).getName());
+                    }
+
+                    System.out.print("Enter number of items: ");
+                    int n = sc.nextInt();
+
+                    for (int i = 0; i < n; i++) {
+
+                        System.out.print("Select medicine number: ");
+                        int index = sc.nextInt() - 1;
+
+                        if (index < 0 || index >= list.size()) {
+                            System.out.println("Invalid!");
+                            i--;
+                            continue;
+                        }
+
+                        Medicine m = list.get(index);
+
+                        System.out.print("Enter quantity: ");
+                        int q = sc.nextInt();
+
+                        if (q > m.getQuantity()) {
+                            System.out.println("Not enough stock!");
+                            i--;
+                            continue;
+                        }
+
+                        double cost = q * m.getPrice();
+                        total += cost;
+
+                        m.setQuantity(m.getQuantity() - q);
+                    }
+
+                    double gst = total * 0.05;
+
+                    System.out.println("\nTotal: ?" + total);
+                    System.out.println("GST: ?" + gst);
+                    System.out.println("Final Amount: ?" + (total + gst));
+                    break;
+
+                case 4:
+                    System.out.println("Exiting...");
+                    break;
+
+                default:
+                    System.out.println("Invalid choice!");
+            }
+
+           } 
+                    while (choice != 4);
+    }
+}
